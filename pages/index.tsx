@@ -4,15 +4,17 @@ import { FormEvent } from 'react'
 
 import client from '../graphql/client'
 import { GET_POKEMONS } from '../graphql/query/get-pokemons'
+
 import { Pokemon } from '../models/pokemon'
 import PokemonCard from '../components/PokemonCard'
 import PokemonLogo from '../components/PokemonLogo'
+import SearchBar from '../components/SearchBar'
 
-interface HomeProps {
+interface Props {
   pokemons: Pokemon[]
 }
 
-const Home: NextPage<HomeProps> = ({ pokemons }: HomeProps) => {
+const Home: NextPage<Props> = ({ pokemons }: Props) => {
   return (
     <div className="min-h-screen bg-blue-200">
       <Head>
@@ -21,17 +23,7 @@ const Home: NextPage<HomeProps> = ({ pokemons }: HomeProps) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <PokemonLogo />
-      <form
-        className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-4 py-4"
-        onSubmit={(event: FormEvent<HTMLFormElement>) => event.preventDefault()}
-      >
-        <div className="flex items-center bg-white rounded-lg overflow-hidden px-2 py-1 justify-between">
-          <input className="text-base text-gray-500 flex-grow outline-none px-2 " type="text" placeholder="Search..." />
-          <div className="flex items-center rounded-lg mx-auto ">
-            <button className="bg-blue-400 text-white text-base rounded-lg px-4 py-2 font-thin">Search</button>
-          </div>
-        </div>
-      </form>
+      <SearchBar onSearch={(searchTerm) => alert(searchTerm)} />
       <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-4 py-12">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {pokemons.map((pokemon) => (
@@ -51,7 +43,7 @@ export async function getServerSideProps() {
         id: 'asc',
       },
       offset: 0,
-      limit: 18,
+      limit: 12,
     },
   })
 
