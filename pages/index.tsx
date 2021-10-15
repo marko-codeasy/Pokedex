@@ -1,11 +1,10 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
-import { FormEvent } from 'react'
 
 import client from '../graphql/client'
 import { GET_POKEMONS } from '../graphql/query/get-pokemons'
 
-import { Pokemon } from '../models/pokemon'
+import { GetPokemonsQueryData, Pokemon } from '../models/pokemon'
 import PokemonCard from '../components/PokemonCard'
 import PokemonLogo from '../components/PokemonLogo'
 import SearchBar from '../components/SearchBar'
@@ -36,7 +35,7 @@ const Home: NextPage<Props> = ({ pokemons }: Props) => {
 }
 
 export async function getServerSideProps() {
-  const { data } = await client.query<any>({
+  const { data } = await client.query<GetPokemonsQueryData>({
     query: GET_POKEMONS,
     variables: {
       orderBy: {
@@ -47,7 +46,7 @@ export async function getServerSideProps() {
     },
   })
 
-  const pokemons = data.pokemons.map(({ id, name, stats }: any) => ({
+  const pokemons = data.pokemons.map(({ id, name, stats }) => ({
     id,
     name: name,
     types: stats.nodes[0].types.map((type: any) => type.type.name),
