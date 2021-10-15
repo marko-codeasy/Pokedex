@@ -1,3 +1,9 @@
+export interface Pokemon {
+  id: number
+  name: string
+  types: string[]
+}
+
 /* TODO: generate graphql types using apollo codegen */
 export interface GetPokemonsQueryData {
   pokemons: {
@@ -15,10 +21,4 @@ export interface GetPokemonsQueryData {
       }[]
     }
   }[]
-}
-
-export interface Pokemon {
-  id: number
-  name: string
-  types: string[]
 }
