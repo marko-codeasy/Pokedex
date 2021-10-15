@@ -1,6 +1,7 @@
 import type { AppProps } from 'next/app'
 import { ApolloProvider } from '@apollo/client'
 import 'tailwindcss/tailwind.css'
+import '../styles/globals.css'
 
 import client from '../graphql/client'
 

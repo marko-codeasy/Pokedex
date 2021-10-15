@@ -3,7 +3,9 @@ module.exports = {
   darkMode: false, // or 'media' or 'class'
   theme: {
     extend: {
-      pokemon: '',
+      fontSize: {
+        xss: '0.65rem',
+      },
     },
   },
   variants: {
