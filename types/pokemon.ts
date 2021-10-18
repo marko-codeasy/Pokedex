@@ -42,4 +42,9 @@ export interface GetPokemonsQueryData {
       }[]
     }
   }[]
+  pokemonCount: {
+    aggregate: {
+      count: number
+    }
+  }
 }

@@ -11,34 +11,43 @@ import PokemonCard from '../components/PokemonCard'
 import PokemonLogo from '../components/PokemonLogo'
 import SearchBar, { SearchEvent } from '../components/SearchBar'
 import Paginator from '../components/Paginator'
+import { Pagination } from '../types/pagination'
 
-const toPokemon = ({ id, name, stats }: GetPokemonsQueryData['pokemons'][0]) => ({
+const toPokemonModel = ({ id, name, stats }: GetPokemonsQueryData['pokemons'][0]) => ({
   id,
   name: name,
   types: stats.nodes[0].types.map((type) => type.type.name),
 })
 
+const POKEMONS_PER_PAGE = 12
+
 interface Props {
   pokemons: Pokemon[]
+  pokemonCount: number
 }
 
-const Home: NextPage<Props> = ({ pokemons: initialPokemons }: Props) => {
+const Home: NextPage<Props> = ({ pokemons: initialPokemons, pokemonCount }: Props) => {
   const [pokemons, setPokemons] = useState<Pokemon[]>(initialPokemons)
+  const [pagination, setPagination] = useState<Pagination>({
+    page: 1,
+    perPage: POKEMONS_PER_PAGE,
+    total: pokemonCount,
+  })
+
   const [getPokemons, { loading }] = useLazyQuery<GetPokemonsQueryData>(GET_POKEMONS, {
     variables: {
-      orderBy: {
-        id: 'asc',
-      },
+      limit: POKEMONS_PER_PAGE,
     },
     onCompleted: (data) => {
-      setPokemons(data.pokemons.map(toPokemon))
+      setPokemons(data.pokemons.map(toPokemonModel))
+      setPagination({ ...pagination, total: data.pokemonCount.aggregate.count })
     },
   })
 
   const handleSearch = ({ searchTerm, selectedType }: SearchEvent) => {
+    setPagination({ ...pagination, page: 0 })
     getPokemons({
       variables: {
-        limit: 12,
         offset: 0,
         where: {
           name: { _regex: `^${searchTerm}` },
@@ -69,7 +78,7 @@ const Home: NextPage<Props> = ({ pokemons: initialPokemons }: Props) => {
         </div>
         <SearchBar onSearch={handleSearch} />
         <div className="flex justify-center">
-          <Paginator page={2} perPage={12} total={25} onPageChange={(page) => console.log(page)} />
+          <Paginator {...pagination} onPageChange={(page) => setPagination({ ...pagination, page })} />
         </div>
         <section style={{ opacity: loading ? 0.5 : 1 }}>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -87,19 +96,18 @@ export async function getServerSideProps() {
   const { data } = await client.query<GetPokemonsQueryData>({
     query: GET_POKEMONS,
     variables: {
-      orderBy: {
-        id: 'asc',
-      },
       offset: 0,
-      limit: 12,
+      limit: POKEMONS_PER_PAGE,
     },
   })
 
-  const pokemons = data.pokemons.map(toPokemon)
+  const pokemons = data.pokemons.map(toPokemonModel)
+  const pokemonCount = data.pokemonCount.aggregate.count
 
   return {
     props: {
       pokemons,
+      pokemonCount,
     },
   }
 }
