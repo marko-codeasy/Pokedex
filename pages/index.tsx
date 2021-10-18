@@ -9,7 +9,7 @@ import { GET_POKEMONS } from '../graphql/query/get-pokemons'
 import { GetPokemonsQueryData, Pokemon } from '../types/pokemon'
 import PokemonCard from '../components/PokemonCard'
 import PokemonLogo from '../components/PokemonLogo'
-import SearchBar from '../components/SearchBar'
+import SearchBar, { SearchEvent } from '../components/SearchBar'
 import Paginator from '../components/Paginator'
 
 const toPokemon = ({ id, name, stats }: GetPokemonsQueryData['pokemons'][0]) => ({
@@ -35,8 +35,25 @@ const Home: NextPage<Props> = ({ pokemons: initialPokemons }: Props) => {
     },
   })
 
-  const handleSearch = (searchTerm: string) => {
-    getPokemons({ variables: { limit: 12, offset: 0, where: { name: { _regex: `^${searchTerm}` } } } })
+  const handleSearch = ({ searchTerm, selectedType }: SearchEvent) => {
+    getPokemons({
+      variables: {
+        limit: 12,
+        offset: 0,
+        where: {
+          name: { _regex: `^${searchTerm}` },
+          pokemon_v2_pokemons: {
+            pokemon_v2_pokemontypes: {
+              pokemon_v2_type: {
+                name: {
+                  ...(selectedType && { _eq: selectedType }),
+                },
+              },
+            },
+          },
+        },
+      },
+    })
   }
 
   return (

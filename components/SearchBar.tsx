@@ -2,16 +2,22 @@ import { ChangeEvent, FormEvent, useState } from 'react'
 
 import { PokemonType } from '../types/pokemon'
 
+export interface SearchEvent {
+  searchTerm: string
+  selectedType: string
+}
+
 interface Props {
-  onSearch: (searchTerm: string) => void
+  onSearch: (searchEvent: SearchEvent) => void
 }
 
 export default function SearchBar({ onSearch }: Props) {
   const [searchTerm, setSearchTerm] = useState<string>('')
+  const [selectedType, setSelectedType] = useState<string>('')
 
   const handleSearch = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    onSearch(searchTerm)
+    onSearch({ searchTerm, selectedType })
   }
 
   return (
@@ -24,7 +30,10 @@ export default function SearchBar({ onSearch }: Props) {
           onInput={(event: ChangeEvent<HTMLInputElement>) => setSearchTerm(event.target.value)}
         />
         <div className="flex items-center rounded-lg mx-auto ">
-          <select className="text-base text-gray-800 outline-none border-2 px-4 py-2 rounded-lg mr-2">
+          <select
+            className="text-base text-gray-800 outline-none border-2 px-4 py-2 rounded-lg mr-2"
+            onChange={(event: ChangeEvent<HTMLSelectElement>) => setSelectedType(event.target.value)}
+          >
             <option value="">All</option>
             {Object.entries(PokemonType).map(([name, value]) => (
               <option key={value} value={value}>
