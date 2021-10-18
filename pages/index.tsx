@@ -6,10 +6,11 @@ import { useLazyQuery } from '@apollo/client'
 import client from '../graphql/client'
 import { GET_POKEMONS } from '../graphql/query/get-pokemons'
 
-import { GetPokemonsQueryData, Pokemon } from '../models/pokemon'
+import { GetPokemonsQueryData, Pokemon } from '../types/pokemon'
 import PokemonCard from '../components/PokemonCard'
 import PokemonLogo from '../components/PokemonLogo'
 import SearchBar from '../components/SearchBar'
+import Paginator from '../components/Paginator'
 
 const toPokemon = ({ id, name, stats }: GetPokemonsQueryData['pokemons'][0]) => ({
   id,
@@ -45,15 +46,22 @@ const Home: NextPage<Props> = ({ pokemons: initialPokemons }: Props) => {
         <meta name="description" content="Poxed using PokeAPI GraphQL" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <PokemonLogo />
-      <SearchBar onSearch={handleSearch} />
-      <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-4 py-12" style={{ opacity: loading ? 0.5 : 1 }}>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {pokemons.map((pokemon) => (
-            <PokemonCard key={pokemon.id} {...pokemon} captured={false} onCaptured={(id) => alert(id)} />
-          ))}
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-4 py-12">
+        <div className="mb-8">
+          <PokemonLogo />
         </div>
-      </section>
+        <SearchBar onSearch={handleSearch} />
+        <div className="flex justify-center">
+          <Paginator page={2} perPage={12} total={25} onPageChange={(page) => console.log(page)} />
+        </div>
+        <section style={{ opacity: loading ? 0.5 : 1 }}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {pokemons.map((pokemon) => (
+              <PokemonCard key={pokemon.id} {...pokemon} captured={false} onCaptured={(id) => alert(id)} />
+            ))}
+          </div>
+        </section>
+      </main>
     </div>
   )
 }

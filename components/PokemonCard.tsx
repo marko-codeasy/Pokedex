@@ -1,5 +1,4 @@
-import { Pokemon } from '../models/pokemon'
-
+import { Pokemon } from '../types/pokemon'
 import { capitalize } from '../helpers/capitalize'
 
 interface Props extends Pokemon {
