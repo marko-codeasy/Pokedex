@@ -10,7 +10,7 @@ export const GET_POKEMONS = gql`
     pokemons: pokemon_v2_pokemonspecies(offset: $offset, limit: $limit, where: $where, order_by: $orderBy) {
       id
       name
-      info: pokemon_v2_pokemons_aggregate(limit: 1) {
+      info: pokemon_v2_pokemons_aggregate(limit: 3) {
         nodes {
           stats: pokemon_v2_pokemonstats {
             base_stat

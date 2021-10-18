@@ -14,11 +14,20 @@ import Paginator from '../components/Paginator'
 import { Pagination } from '../types/pagination'
 
 const POKEMONS_PER_PAGE = 12
-const toPokemonModel = ({ id, name, info }: GetPokemonsQueryData['pokemons'][0]) => ({
-  id,
-  name: name,
-  types: info.nodes[0].types.map((type) => type.type.name),
-})
+const toPokemonModel = ({ id, name, info }: GetPokemonsQueryData['pokemons'][0]) => {
+  return {
+    id,
+    name: name,
+    types: Array.from(
+      new Set(
+        info.nodes
+          .map((node) => node.types)
+          .flat()
+          .map(({ type }) => type.name)
+      )
+    ),
+  }
+}
 
 interface PokemonFilter {
   searchTerm: string
