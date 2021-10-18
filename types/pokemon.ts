@@ -30,7 +30,7 @@ export interface GetPokemonsQueryData {
   pokemons: {
     id: number
     name: string
-    stats: {
+    info: {
       nodes: {
         height: number
         weight: number

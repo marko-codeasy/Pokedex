@@ -20,6 +20,11 @@ export default function SearchBar({ onSearch }: Props) {
     onSearch({ searchTerm, selectedType })
   }
 
+  const handleSelectedType = (event: ChangeEvent<HTMLSelectElement>) => {
+    setSelectedType(event.target.value)
+    onSearch({ searchTerm, selectedType: event.target.value })
+  }
+
   return (
     <form onSubmit={handleSearch}>
       <div className="flex items-center bg-white rounded-lg overflow-hidden px-2 py-1 justify-between">
@@ -32,7 +37,7 @@ export default function SearchBar({ onSearch }: Props) {
         <div className="flex items-center rounded-lg mx-auto ">
           <select
             className="text-base text-gray-800 outline-none border-2 px-4 py-2 rounded-lg mr-2"
-            onChange={(event: ChangeEvent<HTMLSelectElement>) => setSelectedType(event.target.value)}
+            onChange={handleSelectedType}
           >
             <option value="">All</option>
             {Object.entries(PokemonType).map(([name, value]) => (

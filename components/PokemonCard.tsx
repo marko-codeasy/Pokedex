@@ -12,7 +12,7 @@ export default function PokemonCard({ id, name, types, captured, onCaptured }: P
       <div className="mb-2">
         <img
           className="object-center object-cover rounded-full h-36 w-36"
-          src={`https://img.pokemondb.net/sprites/omega-ruby-alpha-sapphire/dex/normal/${name}.png`}
+          src={`https://img.pokemondb.net/sprites/home/normal/${name}.png`}
           alt="photo"
         />
       </div>

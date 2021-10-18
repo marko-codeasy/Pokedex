@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import { useLazyQuery } from '@apollo/client'
@@ -13,13 +13,17 @@ import SearchBar, { SearchEvent } from '../components/SearchBar'
 import Paginator from '../components/Paginator'
 import { Pagination } from '../types/pagination'
 
-const toPokemonModel = ({ id, name, stats }: GetPokemonsQueryData['pokemons'][0]) => ({
+const POKEMONS_PER_PAGE = 12
+const toPokemonModel = ({ id, name, info }: GetPokemonsQueryData['pokemons'][0]) => ({
   id,
   name: name,
-  types: stats.nodes[0].types.map((type) => type.type.name),
+  types: info.nodes[0].types.map((type) => type.type.name),
 })
 
-const POKEMONS_PER_PAGE = 12
+interface PokemonFilter {
+  searchTerm: string
+  selectedType: string
+}
 
 interface Props {
   pokemons: Pokemon[]
@@ -27,12 +31,15 @@ interface Props {
 }
 
 const Home: NextPage<Props> = ({ pokemons: initialPokemons, pokemonCount }: Props) => {
+  const isMounted = useRef(false)
+
   const [pokemons, setPokemons] = useState<Pokemon[]>(initialPokemons)
   const [pagination, setPagination] = useState<Pagination>({
     page: 1,
     perPage: POKEMONS_PER_PAGE,
     total: pokemonCount,
   })
+  const [filter, setFilter] = useState<PokemonFilter>({ searchTerm: '', selectedType: '' })
 
   const [getPokemons, { loading }] = useLazyQuery<GetPokemonsQueryData>(GET_POKEMONS, {
     variables: {
@@ -44,18 +51,22 @@ const Home: NextPage<Props> = ({ pokemons: initialPokemons, pokemonCount }: Prop
     },
   })
 
-  const handleSearch = ({ searchTerm, selectedType }: SearchEvent) => {
-    setPagination({ ...pagination, page: 0 })
+  useEffect(() => {
+    if (!isMounted.current) {
+      isMounted.current = true
+      return
+    }
     getPokemons({
       variables: {
-        offset: 0,
+        offset: (pagination.page - 1) * POKEMONS_PER_PAGE,
+
         where: {
-          name: { _regex: `^${searchTerm}` },
+          name: { _regex: `^${filter.searchTerm}` },
           pokemon_v2_pokemons: {
             pokemon_v2_pokemontypes: {
               pokemon_v2_type: {
                 name: {
-                  ...(selectedType && { _eq: selectedType }),
+                  ...(filter.selectedType && { _eq: filter.selectedType }),
                 },
               },
             },
@@ -63,6 +74,11 @@ const Home: NextPage<Props> = ({ pokemons: initialPokemons, pokemonCount }: Prop
         },
       },
     })
+  }, [pagination.page, filter])
+
+  const handleSearch = ({ searchTerm, selectedType }: SearchEvent) => {
+    setPagination({ ...pagination, page: 1 })
+    setFilter({ searchTerm, selectedType })
   }
 
   return (
