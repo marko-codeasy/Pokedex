@@ -70,7 +70,7 @@ const Home: NextPage<Props> = ({ pokemons: initialPokemons, pokemonCount }: Prop
         offset: (pagination.page - 1) * POKEMONS_PER_PAGE,
 
         where: {
-          name: { _regex: `^${filter.searchTerm}` },
+          name: { _iregex: `^${filter.searchTerm}` },
           pokemon_v2_pokemons: {
             pokemon_v2_pokemontypes: {
               pokemon_v2_type: {
