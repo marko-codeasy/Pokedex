@@ -102,9 +102,11 @@ const Home: NextPage<Props> = ({ pokemons: initialPokemons, pokemonCount }: Prop
           <PokemonLogo />
         </div>
         <SearchBar onSearch={handleSearch} />
-        <div className="flex justify-center">
-          <Paginator {...pagination} onPageChange={(page) => setPagination({ ...pagination, page })} />
-        </div>
+        {pokemons.length && (
+          <div className="flex justify-center">
+            <Paginator {...pagination} onPageChange={(page) => setPagination({ ...pagination, page })} />
+          </div>
+        )}
         <section style={{ opacity: loading ? 0.5 : 1 }}>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {pokemons.map((pokemon) => (
@@ -123,6 +125,9 @@ export async function getServerSideProps() {
     variables: {
       offset: 0,
       limit: POKEMONS_PER_PAGE,
+      orderBy: {
+        id: 'asc',
+      },
     },
   })
 
