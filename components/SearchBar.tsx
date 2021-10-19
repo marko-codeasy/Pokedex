@@ -36,7 +36,7 @@ export default function SearchBar({ onSearch }: Props) {
         />
         <div className="flex items-center rounded-lg mx-auto ">
           <select
-            className="text-base text-gray-800 outline-none border-2 px-4 py-2 rounded-lg mr-2"
+            className="text-base cursor-pointer text-gray-800 outline-none border-2 px-4 py-2 rounded-lg mr-2"
             onChange={handleSelectedType}
           >
             <option value="">All</option>
