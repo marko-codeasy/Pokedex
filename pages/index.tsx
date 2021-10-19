@@ -102,7 +102,7 @@ const Home: NextPage<Props> = ({ pokemons: initialPokemons, pokemonCount }: Prop
           <PokemonLogo />
         </div>
         <SearchBar onSearch={handleSearch} />
-        {pokemons.length && (
+        {pokemons.length > 0 && (
           <div className="flex justify-center">
             <Paginator {...pagination} onPageChange={(page) => setPagination({ ...pagination, page })} />
           </div>
