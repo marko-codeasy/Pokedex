@@ -11,6 +11,7 @@ import PokemonCard from '../components/PokemonCard'
 import SearchBar, { SearchEvent } from '../components/SearchBar'
 import Paginator from '../components/Paginator'
 import { Pagination } from '../types/pagination'
+import { useFavoritePokemons } from '../hooks/use-favorite-pokemons'
 
 const POKEMONS_PER_PAGE = 12
 const toPokemonModel = ({ id, name, info }: GetPokemonsQueryData['pokemons'][0]): Pokemon => {
@@ -35,26 +36,24 @@ const toPokemonModel = ({ id, name, info }: GetPokemonsQueryData['pokemons'][0])
   }
 }
 
-interface PokemonFilter {
-  searchTerm: string
-  selectedType: string
-}
-
 interface Props {
   pokemons: Pokemon[]
   pokemonCount: number
 }
 
+const USER_ID = 1
+
 const Home: NextPage<Props> = ({ pokemons: initialPokemons, pokemonCount }: Props) => {
   const isMounted = useRef(false)
 
   const [pokemons, setPokemons] = useState<Pokemon[]>(initialPokemons)
+  const [favoritePokemons, toggleFavoritePokemon] = useFavoritePokemons(USER_ID)
   const [pagination, setPagination] = useState<Pagination>({
     page: 1,
     perPage: POKEMONS_PER_PAGE,
     total: pokemonCount,
   })
-  const [filter, setFilter] = useState<PokemonFilter>({ searchTerm: '', selectedType: '' })
+  const [searchFilter, setSearchFilter] = useState<SearchEvent>({ searchTerm: '', selectedType: '', sortOrder: '' })
 
   const [getPokemons, { loading }] = useLazyQuery<GetPokemonsQueryData>(GET_POKEMONS, {
     variables: {
@@ -71,17 +70,18 @@ const Home: NextPage<Props> = ({ pokemons: initialPokemons, pokemonCount }: Prop
       isMounted.current = true
       return
     }
+    const { searchTerm, selectedType, sortOrder } = searchFilter
     getPokemons({
       variables: {
         offset: (pagination.page - 1) * POKEMONS_PER_PAGE,
-
+        orderBy: { ...(!!sortOrder && { name: sortOrder }) },
         where: {
-          name: { _iregex: `^${filter.searchTerm}` },
+          name: { _iregex: `^${searchTerm}` },
           pokemon_v2_pokemons: {
             pokemon_v2_pokemontypes: {
               pokemon_v2_type: {
                 name: {
-                  ...(filter.selectedType && { _eq: filter.selectedType }),
+                  ...(selectedType && { _eq: selectedType }),
                 },
               },
             },
@@ -89,11 +89,11 @@ const Home: NextPage<Props> = ({ pokemons: initialPokemons, pokemonCount }: Prop
         },
       },
     })
-  }, [pagination.page, filter])
+  }, [pagination.page, searchFilter.searchTerm, searchFilter.selectedType, searchFilter.sortOrder])
 
-  const handleSearch = ({ searchTerm, selectedType }: SearchEvent) => {
+  const handleSearch = (searchEvent: Partial<SearchEvent>) => {
     setPagination({ ...pagination, page: 1 })
-    setFilter({ searchTerm, selectedType })
+    setSearchFilter({ ...searchFilter, ...searchEvent })
   }
 
   return (
@@ -104,19 +104,24 @@ const Home: NextPage<Props> = ({ pokemons: initialPokemons, pokemonCount }: Prop
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-4 py-12">
-        <SearchBar onSearch={handleSearch} />
-        {pokemons.length > 0 ? (
-          <div className="flex justify-center">
-            <Paginator {...pagination} onPageChange={(page) => setPagination({ ...pagination, page })} />
-          </div>
-        ) : (
-          <span className="flex justify-center mt-8">No Pokemon found</span>
-        )}
+        <SearchBar {...searchFilter} onSearch={handleSearch} />
+        <div className="flex justify-center h-14">
+          <Paginator {...pagination} onPageChange={(page) => setPagination({ ...pagination, page })} />
+        </div>
         <section style={{ opacity: loading ? 0.5 : 1 }}>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {pokemons.map((pokemon) => (
-              <PokemonCard key={pokemon.id} {...pokemon} captured={false} onCaptured={(id) => alert(id)} />
-            ))}
+            {pokemons.length > 0 ? (
+              pokemons.map((pokemon) => (
+                <PokemonCard
+                  key={pokemon.id}
+                  {...pokemon}
+                  captured={favoritePokemons.includes(pokemon.id)}
+                  onCaptured={toggleFavoritePokemon}
+                />
+              ))
+            ) : (
+              <span className="flex justify-center mt-8">No Pokemon found</span>
+            )}
           </div>
         </section>
       </main>

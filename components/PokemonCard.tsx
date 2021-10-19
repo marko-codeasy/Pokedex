@@ -1,7 +1,29 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Pokemon, PokemonStatPrettifyMap } from '../types/pokemon'
+import { Pokemon, PokemonType, PokemonStatPrettifyMap } from '../types/pokemon'
 import { capitalize } from '../helpers/capitalize'
+import Image from 'next/image'
+
+const PokemonTypeBgColorMap = Object.freeze({
+  [PokemonType.Normal]: 'bg-gray-500',
+  [PokemonType.Fire]: 'bg-red-500',
+  [PokemonType.Fighting]: 'bg-red-800',
+  [PokemonType.Water]: 'bg-blue-300',
+  [PokemonType.Flying]: 'bg-indigo-500',
+  [PokemonType.Grass]: 'bg-green-300',
+  [PokemonType.Poison]: 'bg-indigo-700',
+  [PokemonType.Electric]: 'bg-yellow-400',
+  [PokemonType.Ground]: 'bg-yellow-900',
+  [PokemonType.Psychic]: 'bg-pink-400',
+  [PokemonType.Rock]: 'bg-yellow-700',
+  [PokemonType.Ice]: 'bg-blue-200',
+  [PokemonType.Bug]: 'bg-green-600',
+  [PokemonType.Dragon]: 'bg-yellow-800',
+  [PokemonType.Ghost]: 'bg-indigo-300',
+  [PokemonType.Dark]: 'bg-gray-900',
+  [PokemonType.Steel]: 'bg-gray-400',
+  [PokemonType.Fairy]: 'bg-pink-300',
+})
 
 interface Props extends Pokemon {
   captured: boolean
@@ -31,18 +53,21 @@ export default function PokemonCard({ id, name, types, stats, captured, onCaptur
       {!detailsDisplayed ? (
         <>
           <div className="mb-2">
-            <img
-              className="object-center object-cover rounded-full h-36 w-36"
+            <Image
               src={`https://img.pokemondb.net/sprites/home/normal/${name}.png`}
               alt="photo"
+              width={128}
+              height={128}
             />
           </div>
           <div className="text-center mb-4">
-            <p className="text-xl text-gray-700 font-bold mb-2">{capitalize(name)}</p>
+            <p className="text-xl text-gray-600 font-bold mb-2">{capitalize(name)}</p>
             {types.map((type) => (
               <span
                 key={type}
-                className="inline-block rounded-full text-gray-600 bg-gray-100 px-2 py-1 text-xss font-bold mr-3"
+                className={`inline-block rounded-full text-white px-2 py-1 text-xss font-bold mr-3 ${
+                  PokemonTypeBgColorMap[type as PokemonType]
+                }`}
               >
                 {type.toUpperCase()}
               </span>

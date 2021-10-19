@@ -8,8 +8,12 @@ interface Props {
 }
 
 export default function Paginator({ page, perPage, total, onPageChange }: Props): JSX.Element | null {
+  if (total <= perPage) {
+    return null
+  }
+
   return (
-    <div className="inline-flex mt-2 mb-6 xs:mt-0">
+    <div className="inline-flex mt-2 mb-2 xs:mt-0">
       <motion.button
         disabled={page === 1}
         className="text-sm bg-white hover:bg-blue-300 text-gray-800 font-semibold py-2 px-4 rounded-l mr-1 disabled:opacity-50"
