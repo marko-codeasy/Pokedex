@@ -105,10 +105,12 @@ const Home: NextPage<Props> = ({ pokemons: initialPokemons, pokemonCount }: Prop
       </Head>
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-4 py-12">
         <SearchBar onSearch={handleSearch} />
-        {pokemons.length > 0 && (
+        {pokemons.length > 0 ? (
           <div className="flex justify-center">
             <Paginator {...pagination} onPageChange={(page) => setPagination({ ...pagination, page })} />
           </div>
+        ) : (
+          <span className="flex justify-center mt-8">No Pokemon found</span>
         )}
         <section style={{ opacity: loading ? 0.5 : 1 }}>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6">
