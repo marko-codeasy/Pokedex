@@ -1,4 +1,5 @@
 import { ChangeEvent, useEffect, useState } from 'react'
+import Link from 'next/link'
 import PokemonLogo from '../components/PokemonLogo'
 
 interface User {
@@ -35,12 +36,16 @@ export default function Header(): JSX.Element | null {
   }
 
   return (
-    <div className="flex justify-center pt-4">
+    <div className="flex justify-between pt-4">
+      <Link href="/favorites">
+        <a className="bg-white hover:bg-gray-100 text-black text-base rounded-lg px-4 py-2 ml-3 h-10">Favorites</a>
+      </Link>
+
       <PokemonLogo />
 
-      <div className="absolute right-0 mr-2">
+      <div className="mr-3">
         <select
-          className="text-base text-gray-800 outline-none border-2 px-4 py-2 rounded-lg mr-2"
+          className="text-base cursor-pointer text-gray-800 outline-none border-2 px-4 py-2 rounded-lg"
           value={selectedUserId}
           onChange={handleSelectedUser}
         >
