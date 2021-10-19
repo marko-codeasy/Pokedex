@@ -9,9 +9,11 @@ import client from '../graphql/client'
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <ApolloProvider client={client}>
-      <Header />
+      <div className="bg-blue-200">
+        <Header />
 
-      <Component {...pageProps} />
+        <Component {...pageProps} />
+      </div>
     </ApolloProvider>
   )
 }

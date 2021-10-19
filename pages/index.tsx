@@ -8,7 +8,6 @@ import { GET_POKEMONS } from '../graphql/query/get-pokemons'
 
 import { GetPokemonsQueryData, Pokemon } from '../types/pokemon'
 import PokemonCard from '../components/PokemonCard'
-import PokemonLogo from '../components/PokemonLogo'
 import SearchBar, { SearchEvent } from '../components/SearchBar'
 import Paginator from '../components/Paginator'
 import { Pagination } from '../types/pagination'
@@ -91,16 +90,13 @@ const Home: NextPage<Props> = ({ pokemons: initialPokemons, pokemonCount }: Prop
   }
 
   return (
-    <div className="min-h-screen bg-blue-200">
+    <div className="min-h-screen">
       <Head>
         <title>Pokedex</title>
         <meta name="description" content="Poxed using PokeAPI GraphQL" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-4 py-12">
-        <div className="mb-8">
-          <PokemonLogo />
-        </div>
         <SearchBar onSearch={handleSearch} />
         {pokemons.length > 0 && (
           <div className="flex justify-center">

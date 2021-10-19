@@ -1,4 +1,5 @@
 import { ChangeEvent, useEffect, useState } from 'react'
+import PokemonLogo from '../components/PokemonLogo'
 
 interface User {
   id: number
@@ -34,18 +35,22 @@ export default function Header(): JSX.Element | null {
   }
 
   return (
-    <div className="absolute right-0 mr-2 mt-2">
-      <select
-        className="text-base text-gray-800 outline-none border-2 px-4 py-2 rounded-lg mr-2"
-        value={selectedUserId}
-        onChange={handleSelectedUser}
-      >
-        {dummyUsers.map(({ id, firstName, lastName }) => (
-          <option key={id} value={id}>
-            {firstName} {lastName}
-          </option>
-        ))}
-      </select>
+    <div className="flex justify-center pt-4">
+      <PokemonLogo />
+
+      <div className="absolute right-0 mr-2">
+        <select
+          className="text-base text-gray-800 outline-none border-2 px-4 py-2 rounded-lg mr-2"
+          value={selectedUserId}
+          onChange={handleSelectedUser}
+        >
+          {dummyUsers.map(({ id, firstName, lastName }) => (
+            <option key={id} value={id}>
+              {firstName} {lastName}
+            </option>
+          ))}
+        </select>
+      </div>
     </div>
   )
 }
