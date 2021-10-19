@@ -13,7 +13,7 @@ import Paginator from '../components/Paginator'
 import { Pagination } from '../types/pagination'
 
 const POKEMONS_PER_PAGE = 12
-const toPokemonModel = ({ id, name, info }: GetPokemonsQueryData['pokemons'][0]) => {
+const toPokemonModel = ({ id, name, info }: GetPokemonsQueryData['pokemons'][0]): Pokemon => {
   return {
     id,
     name: name,
@@ -25,6 +25,13 @@ const toPokemonModel = ({ id, name, info }: GetPokemonsQueryData['pokemons'][0])
           .map(({ type }) => type.name)
       )
     ),
+    stats: info.nodes
+      .map((node) => node.stats)
+      .flat()
+      .reduce((obj, { base_stat, stat }) => {
+        obj[stat.name] = base_stat
+        return obj
+      }, {} as Record<string, number>),
   }
 }
 

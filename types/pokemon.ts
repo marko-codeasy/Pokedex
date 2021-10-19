@@ -2,6 +2,7 @@ export interface Pokemon {
   id: number
   name: string
   types: string[]
+  stats: Record<string, number>
 }
 
 export enum PokemonType {
@@ -25,6 +26,15 @@ export enum PokemonType {
   Fairy = 'fairy',
 }
 
+export const PokemonStatPrettifyMap: Record<string, string> = {
+  hp: 'HP',
+  attack: 'Attack',
+  defense: 'Defense',
+  'special-attack': 'Special Attack',
+  'special-defense': 'Special Defense',
+  speed: 'Speed',
+}
+
 /* TODO: generate graphql types using apollo codegen */
 export interface GetPokemonsQueryData {
   pokemons: {
@@ -38,6 +48,10 @@ export interface GetPokemonsQueryData {
           type: {
             name: string
           }
+        }[]
+        stats: {
+          base_stat: number
+          stat: { name: string }
         }[]
       }[]
     }
