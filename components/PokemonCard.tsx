@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Pokemon, PokemonType, PokemonStatPrettifyMap } from '../types/pokemon'
-import { capitalize } from '../helpers/capitalize'
+import { capitalize } from '../util/capitalize'
 import Image from 'next/image'
 
 const PokemonTypeBgColorMap = Object.freeze({

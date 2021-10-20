@@ -1,9 +1,8 @@
 import { motion } from 'framer-motion'
 
-interface Props {
-  page: number
-  perPage: number
-  total: number
+import { Pagination } from '../types/pagination'
+
+interface Props extends Pagination {
   onPageChange: (page: number) => void
 }
 

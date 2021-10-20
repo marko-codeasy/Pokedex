@@ -5,7 +5,7 @@ import { useLazyQuery } from '@apollo/client'
 
 import client from '../graphql/client'
 import { GET_POKEMONS } from '../graphql/query/get-pokemons'
-
+import { POKEMONS_PER_PAGE } from '../util/constants'
 import { GetPokemonsQueryData, Pokemon, toPokemonModel } from '../types/pokemon'
 import PokemonCard from '../components/PokemonCard'
 import SearchBar, { SearchEvent } from '../components/SearchBar'
@@ -13,8 +13,6 @@ import Paginator from '../components/Paginator'
 import { Pagination } from '../types/pagination'
 import { useFavoritePokemons } from '../hooks/use-favorite-pokemons'
 import { UserContext } from '../providers/UserProvider'
-
-const POKEMONS_PER_PAGE = 12
 
 interface Props {
   pokemons: Pokemon[]

@@ -2,8 +2,8 @@ import { useContext } from 'react'
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import { useQuery } from '@apollo/client'
-import { GET_POKEMONS } from '../graphql/query/get-pokemons'
 
+import { GET_POKEMONS } from '../graphql/query/get-pokemons'
 import { GetPokemonsQueryData, toPokemonModel } from '../types/pokemon'
 import PokemonCard from '../components/PokemonCard'
 import { useFavoritePokemons } from '../hooks/use-favorite-pokemons'
@@ -30,7 +30,11 @@ const Favorites: NextPage = () => {
   const pokemonCount = data.pokemonCount.aggregate.count
 
   if (pokemonCount === 0) {
-    return <div className="min-h-screen flex justify-center text-xl font-semibold mt-12">You don&apos;t have captured Pokemons</div>
+    return (
+      <div className="min-h-screen flex justify-center text-xl font-semibold mt-12">
+        You don&apos;t have captured Pokemons
+      </div>
+    )
   }
 
   return (

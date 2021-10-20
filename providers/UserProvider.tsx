@@ -1,4 +1,6 @@
 import React, { createContext, useState, useEffect, FC } from 'react'
+
+import { CURRENT_USER_STORAGE_KEY } from '../util/constants'
 import { User } from '../types/user'
 
 type UserContextState = {
@@ -17,7 +19,7 @@ const UserContextProvider: FC = ({ children }) => {
   const [user, setUser] = useState({} as User)
 
   useEffect(() => {
-    const storedCurrentUserString = localStorage.getItem('currentUser')
+    const storedCurrentUserString = localStorage.getItem(CURRENT_USER_STORAGE_KEY)
     if (!storedCurrentUserString) {
       return
     }
@@ -31,7 +33,7 @@ const UserContextProvider: FC = ({ children }) => {
       value={{
         currentUser: user,
         setCurrentUser: (user: User) => {
-          localStorage.setItem('currentUser', JSON.stringify(user))
+          localStorage.setItem(CURRENT_USER_STORAGE_KEY, JSON.stringify(user))
           setUser(user)
         },
       }}
