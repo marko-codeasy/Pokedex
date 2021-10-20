@@ -25,8 +25,8 @@ export default function Header(): JSX.Element | null {
 
   return (
     <div className="flex justify-between pt-4">
-      <Link href="/favorites">
-        <a className="bg-white hover:bg-gray-100 text-black text-base rounded-lg px-4 py-2 ml-3 h-10">Favorites</a>
+      <Link href="/captured">
+        <a className="bg-white hover:bg-gray-100 text-black text-base rounded-lg px-4 py-2 ml-3 h-10">Captured</a>
       </Link>
 
       <PokemonLogo />
