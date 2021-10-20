@@ -74,7 +74,7 @@ export default function PokemonCard({ id, name, types, stats, captured, onCaptur
             ))}
           </div>
           <div>
-            <label className="flex justify-center items-start">
+            <label className="flex justify-center items-start" onClick={(e) => e.stopPropagation()}>
               <div className="bg-white border-2 rounded border-gray-300 w-6 h-6 flex flex-shrink-0 justify-center items-center mr-2 focus-within:border-blue-300">
                 <input
                   type="checkbox"
