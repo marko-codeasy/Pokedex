@@ -1,11 +1,24 @@
 import { render, screen } from '@testing-library/react'
 import PokemonCard from '../components/PokemonCard'
 
-const mockedPokemon = { id: 1, name: 'bulbasaur', types: ['grass', 'poison'] }
+const mockedPokemon = {
+  id: 1,
+  name: 'bulbasaur',
+  types: ['grass', 'poison'],
+  stats: { hp: 45, attack: 49, defense: 49, 'special-attack': 65, 'special-defense': 65, speed: 45 },
+}
 
 describe('Test rendering PokemonCard component', () => {
   beforeEach(() => {
-    render(<PokemonCard id={mockedPokemon.id} name={mockedPokemon.name} types={mockedPokemon.types} captured={false} />)
+    render(
+      <PokemonCard
+        id={mockedPokemon.id}
+        name={mockedPokemon.name}
+        types={mockedPokemon.types}
+        stats={mockedPokemon.stats}
+        captured={false}
+      />
+    )
   })
 
   it('render type 1', () => {
@@ -29,6 +42,6 @@ describe('Test rendering PokemonCard component', () => {
   it('render pokemon image', () => {
     const image = screen.getByRole('img')
 
-    expect(image).toHaveAttribute('src', 'https://img.pokemondb.net/sprites/home/normal/bulbasaur.png')
+    expect(image).toHaveAttribute('alt', 'bulbasaur')
   })
 })

@@ -55,7 +55,7 @@ export default function PokemonCard({ id, name, types, stats, captured, onCaptur
           <div className="mb-2">
             <Image
               src={`https://img.pokemondb.net/sprites/home/normal/${name}.png`}
-              alt="photo"
+              alt={name}
               width={128}
               height={128}
             />
