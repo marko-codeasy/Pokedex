@@ -1,19 +1,20 @@
-import { useContext } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import { useQuery } from '@apollo/client'
 
 import { GET_POKEMONS } from '../graphql/query/get-pokemons'
-import { GetPokemonsQueryData, toPokemonModel } from '../types/pokemon'
+import { GetPokemonsQueryData, Pokemon, toPokemonModel } from '../types/pokemon'
 import PokemonCard from '../components/PokemonCard'
 import { useFavoritePokemons } from '../hooks/use-favorite-pokemons'
 import { UserContext } from '../providers/UserProvider'
 
 const Favorites: NextPage = () => {
   const { currentUser } = useContext(UserContext)
+  const [pokemons, setPokemons] = useState<Pokemon[]>([])
   const [favoritePokemons, toggleFavoritePokemon] = useFavoritePokemons(currentUser?.id || 1)
 
-  const { data, loading } = useQuery<GetPokemonsQueryData>(GET_POKEMONS, {
+  const { loading } = useQuery<GetPokemonsQueryData>(GET_POKEMONS, {
     variables: {
       where: {
         id: {
@@ -21,15 +22,12 @@ const Favorites: NextPage = () => {
         },
       },
     },
+    onCompleted: (data) => {
+      setPokemons(data.pokemons.map(toPokemonModel))
+    },
   })
 
-  if (!data) {
-    return <div className="min-h-screen" />
-  }
-  const pokemons = data.pokemons.map(toPokemonModel)
-  const pokemonCount = data.pokemonCount.aggregate.count
-
-  if (pokemonCount === 0) {
+  if (pokemons.length === 0 && !loading) {
     return (
       <div className="min-h-screen flex justify-center text-xl font-semibold mt-12">
         You don&apos;t have captured Pokemons
