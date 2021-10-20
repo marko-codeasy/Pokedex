@@ -1,12 +1,8 @@
-import { ChangeEvent, useEffect, useState } from 'react'
+import { ChangeEvent, useContext } from 'react'
 import Link from 'next/link'
 import PokemonLogo from '../components/PokemonLogo'
-
-interface User {
-  id: number
-  firstName: string
-  lastName: string
-}
+import { User } from '../types/user'
+import { UserContext } from '../providers/UserProvider'
 
 const dummyUsers: User[] = [
   { id: 1, firstName: 'John', lastName: 'Doe' },
@@ -15,24 +11,16 @@ const dummyUsers: User[] = [
 ]
 
 export default function Header(): JSX.Element | null {
-  const [selectedUserId, setSelectedUserId] = useState<number>(1)
-
-  useEffect(() => {
-    const storedCurrentUserString = localStorage.getItem('currentUser')
-    if (!storedCurrentUserString) {
-      return
-    }
-
-    const storedCurrentUser: User = JSON.parse(storedCurrentUserString)
-    setSelectedUserId(storedCurrentUser.id)
-  }, [])
+  const { currentUser, setCurrentUser } = useContext(UserContext)
 
   const handleSelectedUser = (event: ChangeEvent<HTMLSelectElement>) => {
     const id = Number(event.target.value)
-    setSelectedUserId(id)
-
     const user = dummyUsers.find((user) => user.id === id)
-    localStorage.setItem('currentUser', JSON.stringify(user))
+    user && setCurrentUser(user)
+  }
+
+  if (!currentUser) {
+    return null
   }
 
   return (
@@ -46,7 +34,7 @@ export default function Header(): JSX.Element | null {
       <div className="mr-3">
         <select
           className="text-base cursor-pointer text-gray-800 outline-none border-2 px-4 py-2 rounded-lg"
-          value={selectedUserId}
+          value={currentUser.id}
           onChange={handleSelectedUser}
         >
           {dummyUsers.map(({ id, firstName, lastName }) => (

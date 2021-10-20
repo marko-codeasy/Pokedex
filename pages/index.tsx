@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, useContext } from 'react'
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import { useLazyQuery } from '@apollo/client'
@@ -6,48 +6,26 @@ import { useLazyQuery } from '@apollo/client'
 import client from '../graphql/client'
 import { GET_POKEMONS } from '../graphql/query/get-pokemons'
 
-import { GetPokemonsQueryData, Pokemon } from '../types/pokemon'
+import { GetPokemonsQueryData, Pokemon, toPokemonModel } from '../types/pokemon'
 import PokemonCard from '../components/PokemonCard'
 import SearchBar, { SearchEvent } from '../components/SearchBar'
 import Paginator from '../components/Paginator'
 import { Pagination } from '../types/pagination'
 import { useFavoritePokemons } from '../hooks/use-favorite-pokemons'
+import { UserContext } from '../providers/UserProvider'
 
 const POKEMONS_PER_PAGE = 12
-const toPokemonModel = ({ id, name, info }: GetPokemonsQueryData['pokemons'][0]): Pokemon => {
-  return {
-    id,
-    name: name,
-    types: Array.from(
-      new Set(
-        info.nodes
-          .map((node) => node.types)
-          .flat()
-          .map(({ type }) => type.name)
-      )
-    ),
-    stats: info.nodes
-      .map((node) => node.stats)
-      .flat()
-      .reduce((obj, { base_stat, stat }) => {
-        obj[stat.name] = base_stat
-        return obj
-      }, {} as Record<string, number>),
-  }
-}
 
 interface Props {
   pokemons: Pokemon[]
   pokemonCount: number
 }
 
-const USER_ID = 1
-
 const Home: NextPage<Props> = ({ pokemons: initialPokemons, pokemonCount }: Props) => {
   const isMounted = useRef(false)
-
+  const { currentUser } = useContext(UserContext)
   const [pokemons, setPokemons] = useState<Pokemon[]>(initialPokemons)
-  const [favoritePokemons, toggleFavoritePokemon] = useFavoritePokemons(USER_ID)
+  const [favoritePokemons, toggleFavoritePokemon] = useFavoritePokemons(currentUser?.id || 1)
   const [pagination, setPagination] = useState<Pagination>({
     page: 1,
     perPage: POKEMONS_PER_PAGE,
