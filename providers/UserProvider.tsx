@@ -1,22 +1,22 @@
 import React, { createContext, useState, useEffect, FC } from 'react'
 
-import { CURRENT_USER_STORAGE_KEY } from '../util/constants'
+import { CURRENT_USER_STORAGE_KEY, DUMMY_USERS } from '../util/constants'
 import { User } from '../types/user'
 
 type UserContextState = {
-  currentUser: User | null
+  currentUser: User
   setCurrentUser: (user: User) => void
 }
 
 const contextDefaultValues: UserContextState = {
-  currentUser: null,
+  currentUser: DUMMY_USERS[0],
   setCurrentUser: () => undefined,
 }
 
 export const UserContext = createContext<UserContextState>(contextDefaultValues)
 
 const UserContextProvider: FC = ({ children }) => {
-  const [user, setUser] = useState({} as User)
+  const [user, setUser] = useState(DUMMY_USERS[0])
 
   useEffect(() => {
     const storedCurrentUserString = localStorage.getItem(CURRENT_USER_STORAGE_KEY)

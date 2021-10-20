@@ -1,22 +1,16 @@
 import { ChangeEvent, useContext } from 'react'
 import Link from 'next/link'
 
+import { DUMMY_USERS } from '../util/constants'
 import PokemonLogo from '../components/PokemonLogo'
-import { User } from '../types/user'
 import { UserContext } from '../providers/UserProvider'
-
-const dummyUsers: User[] = [
-  { id: 1, firstName: 'John', lastName: 'Doe' },
-  { id: 2, firstName: 'Jane', lastName: 'Doe' },
-  { id: 3, firstName: 'Will', lastName: 'Smith' },
-]
 
 export default function Header(): JSX.Element | null {
   const { currentUser, setCurrentUser } = useContext(UserContext)
 
   const handleSelectedUser = (event: ChangeEvent<HTMLSelectElement>) => {
     const id = Number(event.target.value)
-    const user = dummyUsers.find((user) => user.id === id)
+    const user = DUMMY_USERS.find((user) => user.id === id)
     user && setCurrentUser(user)
   }
 
@@ -38,7 +32,7 @@ export default function Header(): JSX.Element | null {
           value={currentUser.id}
           onChange={handleSelectedUser}
         >
-          {dummyUsers.map(({ id, firstName, lastName }) => (
+          {DUMMY_USERS.map(({ id, firstName, lastName }) => (
             <option key={id} value={id}>
               {firstName} {lastName}
             </option>

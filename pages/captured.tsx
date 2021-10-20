@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useState } from 'react'
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import { useQuery } from '@apollo/client'
@@ -12,7 +12,7 @@ import { UserContext } from '../providers/UserProvider'
 const Favorites: NextPage = () => {
   const { currentUser } = useContext(UserContext)
   const [pokemons, setPokemons] = useState<Pokemon[]>([])
-  const [favoritePokemons, toggleFavoritePokemon] = useFavoritePokemons(currentUser?.id || 1)
+  const [favoritePokemons, toggleFavoritePokemon] = useFavoritePokemons(currentUser.id)
 
   const { loading } = useQuery<GetPokemonsQueryData>(GET_POKEMONS, {
     variables: {

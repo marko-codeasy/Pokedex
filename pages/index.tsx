@@ -23,7 +23,7 @@ const Home: NextPage<Props> = ({ pokemons: initialPokemons, pokemonCount }: Prop
   const isMounted = useRef(false)
   const { currentUser } = useContext(UserContext)
   const [pokemons, setPokemons] = useState<Pokemon[]>(initialPokemons)
-  const [favoritePokemons, toggleFavoritePokemon] = useFavoritePokemons(currentUser?.id || 1)
+  const [favoritePokemons, toggleFavoritePokemon] = useFavoritePokemons(currentUser && currentUser.id)
   const [pagination, setPagination] = useState<Pagination>({
     page: 1,
     perPage: POKEMONS_PER_PAGE,
