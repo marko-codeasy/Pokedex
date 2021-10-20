@@ -27,6 +27,11 @@ const Favorites: NextPage = () => {
     return <div className="min-h-screen" />
   }
   const pokemons = data.pokemons.map(toPokemonModel)
+  const pokemonCount = data.pokemonCount.aggregate.count
+
+  if (pokemonCount === 0) {
+    return <div className="min-h-screen flex justify-center text-xl font-semibold mt-12">You don&apos;t have captured Pokemons</div>
+  }
 
   return (
     <div className="min-h-screen">

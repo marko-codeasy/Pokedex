@@ -87,20 +87,20 @@ const Home: NextPage<Props> = ({ pokemons: initialPokemons, pokemonCount }: Prop
           <Paginator {...pagination} onPageChange={(page) => setPagination({ ...pagination, page })} />
         </div>
         <section style={{ opacity: loading ? 0.5 : 1 }}>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {pokemons.length > 0 ? (
-              pokemons.map((pokemon) => (
+          {pokemons.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {pokemons.map((pokemon) => (
                 <PokemonCard
                   key={pokemon.id}
                   {...pokemon}
                   captured={favoritePokemons.includes(pokemon.id)}
                   onCaptured={toggleFavoritePokemon}
                 />
-              ))
-            ) : (
-              <span className="flex justify-center mt-8">No Pokemon found</span>
-            )}
-          </div>
+              ))}
+            </div>
+          ) : (
+            <span className="flex justify-center text-xl font-semibold mt-8">No Pokemon found</span>
+          )}
         </section>
       </main>
     </div>
